@@ -4,7 +4,7 @@ WORKDIR /app
 
 COPY . .
 
-RUN node i
+RUN npm i
 
 EXPOSE 3000
 
