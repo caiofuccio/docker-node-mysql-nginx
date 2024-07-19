@@ -20,26 +20,34 @@ services:
         restart: always
         entrypoint: sh -c "npm install && node index.js"
         ports:
-            - 3000:3000
+            - '3000:3000'
         depends_on:
             db:
                 condition: service_healthy
         networks:
             - default-network
+        environment:
+            - DB_HOST=db
+            - DB_USER=root
+            - DB_PASSWORD=root
+            - DB_NAME=nodedb
+            - DB_PORT=3306
 
     db:
         build:
-            context: ./mysql
+            context: ./db
         container_name: db
         restart: always
         tty: true
         volumes:
-            - ./mysql:/var/lib/sql
+            - ./db:/var/lib/db
         environment:
             - MYSQL_DATABASE=nodedb
             - MYSQL_ROOT_PASSWORD=root
         ports:
             - '3306:3306'
+        expose:
+            - '3306'
         networks:
             - default-network
         healthcheck:
@@ -52,7 +60,7 @@ services:
                     'localhost',
                     '-u',
                     'root',
-                    '-p$$MYSQL_ROOT_PASSWORD',
+                    '-p${MYSQL_ROOT_PASSWORD}',
                 ]
             interval: 5s
             timeout: 10s
