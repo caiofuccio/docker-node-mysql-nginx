@@ -17,6 +17,8 @@ services:
         build:
             context: ./node
         container_name: node
+        volumes:
+            - ./node:/usr/src/app
         restart: always
         entrypoint: sh -c "npm install && node index.js"
         ports:
